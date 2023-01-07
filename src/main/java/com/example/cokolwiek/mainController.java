@@ -5,19 +5,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 public class mainController implements Initializable {
     @FXML
@@ -33,11 +31,56 @@ public class mainController implements Initializable {
     @FXML Button editButton;
     @FXML Button clearButton;
     @FXML Button deleteButton;
+    public DatabaseConnection handle;
 
+    TableColumn<Gate, Integer> idCol, inputsCol;
+    TableColumn<Gate, String> nameCol, mapNameCol;
     public static ObservableList<Gate> data;
 
-    private void save(){
+    private void deletePrompt(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Usuwanie");
+        alert.setHeaderText("Czy napewno chcesz usunąć?");
+        Optional<ButtonType> res = alert.showAndWait();
+        if(res.isEmpty()){
+            System.out.println("Nie wiem!");
+        } else if (res.get() == ButtonType.CANCEL || res.get() == ButtonType.CLOSE){
+            System.out.println("Cancel lub Close");
+        } else if (res.get() == ButtonType.OK){
+            System.out.println("OK");
+            delete();
+        }
+    }
 
+    private void inputError(boolean puste){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Błędne dane");
+        if(puste){
+            alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+            alert.setContentText("Puste pola!");
+        }else {
+            alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+            alert.setContentText("Nazwa nie może być pusta lub zawierać cyfr oraz musi być unikatowa. \nIlość wejść musi zawierać się w zakresie od 1 do 10.");
+        }
+        alert.showAndWait();
+    }
+
+    private void delete(){
+        int index = this.tabela.getSelectionModel().getFocusedIndex();
+        int indexDb = this.tabela.getItems().get(index).getID();
+        String outMapName = this.tabela.getItems().get(index).getMap_Name();
+        System.out.println("Zaznaczony rekord nr. "+index);
+        System.out.println(this.tabela.getItems().get(index).getMap_Name());
+        this.handle.deleteTable(outMapName);
+        this.handle.deleteRecord(indexDb);
+        loadData(this.handle.getBramkiTable());
+    }
+
+    // inputs: 1-10 | name male, duze litery bez znakow specjalnych
+    private boolean save(String name, int inputs){
+        if(inputs > 0 && inputs <= 10)
+            return name.matches("[a-zA-Z]+");
+        return false;
     }
 
     private void loadData(ObservableList<Gate> res){
@@ -45,17 +88,17 @@ public class mainController implements Initializable {
     }
 
     private void initTabela(){
-        TableColumn<Gate, Integer> idCol = new TableColumn<>("ID");
+        this.idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("ID"));
 
-        TableColumn<Gate, String> nameCol = new TableColumn<>("Name");
+        this.nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(100);
         nameCol.setCellValueFactory(new PropertyValueFactory<Gate, String>("Name"));
 
-        TableColumn<Gate, Integer> inputsCol = new TableColumn<>("Inputs");
+        this.inputsCol = new TableColumn<>("Inputs");
         inputsCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("Inputs"));
 
-        TableColumn<Gate, String> mapNameCol = new TableColumn<>("Map_Name");
+        this.mapNameCol = new TableColumn<>("Map_Name");
         mapNameCol.setMinWidth(150);
         mapNameCol.setCellValueFactory(new PropertyValueFactory<Gate, String>("Map_Name"));
 
@@ -64,29 +107,41 @@ public class mainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        DatabaseConnection handle = new DatabaseConnection();
+        this.handle = new DatabaseConnection();
         initTabela();
         loadData(handle.getBramkiTable());
 
-        saveButton.setOnAction( event -> {
-            System.out.println("saveButton");
-            System.out.println(this.nameField.getText());
+        TableColumn<Gate, ?> nameColumn = tabela.getColumns().get(1);
 
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("newWindow.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-                Stage stage = new Stage();
-                stage.setTitle("Dane Bramki");
-                stage.setScene(scene);
-                stage.show();
-            } catch ( IOException e ){
-                e.printStackTrace();
+        saveButton.setOnAction( event -> {
+            if(!this.inputsField.getText().isBlank() && !this.nameField.getText().isBlank()){
+                if(save(this.nameField.getText(), Integer.parseInt(this.inputsField.getText()))){
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("newWindow.fxml"));
+                        inputMapController controller = new inputMapController();
+                        controller.ileKolumn(Integer.parseInt(this.inputsField.getText())); // przekazuje ilosc kolumn
+                        fxmlLoader.setController(controller);
+                        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+                        Stage stage = new Stage();
+                        stage.setTitle("Dane Bramki");
+                        stage.setScene(scene);
+                        stage.show();
+                    } catch ( IOException e ){
+                        e.printStackTrace();
+                    }
+                } else {
+                    inputError(false);
+                }
+            } else {
+                System.out.println("Bład!");
+                inputError(true);
             }
+
         });
 
         editButton.setOnAction( event -> {
             System.out.println("editButton");
-            System.out.println(this.tabela.getSelectionModel().getFocusedIndex());
+//            System.out.println(this.tabela.getSelectionModel().getFocusedIndex());
         });
 
         clearButton.setOnAction( event -> {
@@ -97,6 +152,7 @@ public class mainController implements Initializable {
 
         deleteButton.setOnAction( event -> {
             System.out.println("deleteButton");
+            deletePrompt();
         });
     }
 }

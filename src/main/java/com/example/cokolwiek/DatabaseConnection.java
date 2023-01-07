@@ -40,4 +40,22 @@ public class DatabaseConnection {
                 }
                 return result;
         }
+
+        public void deleteRecord(int id){
+                try {
+                        Statement st = this.conn.createStatement();
+                        st.executeUpdate("DELETE FROM Bramki WHERE ID="+id+";");
+                } catch (SQLException e){
+                        e.printStackTrace();
+                }
+        }
+
+        public void deleteTable(String name){
+                try {
+                        Statement st = this.conn.createStatement();
+                        st.executeUpdate("DROP TABLE "+name);
+                } catch (SQLException e){
+                        e.printStackTrace();
+                }
+        }
 }
