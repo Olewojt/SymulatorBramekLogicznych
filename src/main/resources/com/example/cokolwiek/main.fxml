@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cokolwiek.mainController">
+  <tabs>
+    <Tab text="Bramki">
+         <content>
+            <SplitPane dividerPositions="0.20833333333333334">
+               <items>
+                  <ListView fx:id="lista" prefHeight="369.0" prefWidth="137.0" />
+                  <Pane fx:id="display" prefHeight="369.0" prefWidth="408.0" />
+               </items></SplitPane>
+         </content>
+    </Tab>
+    <Tab text="Baza">
+         <content>
+            <SplitPane dividerPositions="0.3516666666666667" prefHeight="160.0" prefWidth="200.0">
+               <items>
+                  <GridPane prefHeight="331.0" prefWidth="208.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="61.0" minWidth="10.0" prefWidth="32.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="10.0" prefWidth="152.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.0" minWidth="10.0" prefWidth="34.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dodaj Bramkę" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość wejść" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
+                        <TextField fx:id="inputsField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Button fx:id="saveButton" mnemonicParsing="false" text="Zapisz" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER" />
+                        <Button fx:id="editButton" mnemonicParsing="false" text="Edytuj" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
+                        <Button fx:id="clearButton" mnemonicParsing="false" text="Wyczyść" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="CENTER" />
+                        <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="19.0" prefWidth="62.0" text="Usuń" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="14" GridPane.valignment="CENTER" />
+                     </children>
+                  </GridPane>
+                  <TableView fx:id="tabela" prefHeight="369.0" prefWidth="332.0" />
+               </items>
+            </SplitPane>
+         </content>
+    </Tab>
+  </tabs>
+</TabPane>
