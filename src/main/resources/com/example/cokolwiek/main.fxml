@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
@@ -17,10 +16,53 @@
   <tabs>
     <Tab text="Bramki">
          <content>
-            <SplitPane dividerPositions="0.20833333333333334">
+            <SplitPane dividerPositions="0.24833333333333332">
                <items>
                   <ListView fx:id="lista" prefHeight="369.0" prefWidth="137.0" />
-                  <Pane fx:id="display" prefHeight="369.0" prefWidth="408.0" />
+                  <GridPane>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <TextField fx:id="input1Field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="input10Field" GridPane.rowIndex="2" />
+                        <TextField fx:id="input9Field" layoutX="101.0" layoutY="131.0" GridPane.rowIndex="3" />
+                        <TextField fx:id="input8Field" layoutX="101.0" layoutY="184.0" GridPane.rowIndex="4" />
+                        <TextField fx:id="input7Field" layoutX="101.0" layoutY="237.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="input2Field" layoutX="101.0" layoutY="289.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <TextField fx:id="input5Field" layoutX="283.0" layoutY="78.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <TextField fx:id="input4Field" layoutX="10.0" layoutY="25.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <TextField fx:id="input3Field" layoutX="10.0" layoutY="25.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <TextField fx:id="input6Field" layoutX="283.0" layoutY="237.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Text fx:id="outputText" strokeType="OUTSIDE" strokeWidth="0.0" text="Output" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                        <Text layoutX="215.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Output" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+                        <Text layoutX="215.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input10" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                        <Text layoutX="10.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input2" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                        <Text layoutX="10.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input1" wrappingWidth="45.1572265625" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                        <Text layoutX="283.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input3" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                        <Text layoutX="374.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input9" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                        <Text layoutX="10.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input8" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+                        <Text layoutX="10.0" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input7" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+                        <Text layoutX="101.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input6" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="TOP" />
+                        <Text layoutX="283.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input4" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                        <Text layoutX="374.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input5" wrappingWidth="45.1572265625" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+                        <Button fx:id="checkButton" mnemonicParsing="false" text="Sprawdź!" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+                        <Button fx:id="truthButton" mnemonicParsing="false" prefHeight="19.0" prefWidth="122.0" text="Tablica Prawdy" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                     </children>
+                  </GridPane>
                </items></SplitPane>
          </content>
     </Tab>
@@ -53,7 +95,7 @@
                         <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dodaj Bramkę" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="Dodaj Bramkę" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <TextField fx:id="nameField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość wejść" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER" />

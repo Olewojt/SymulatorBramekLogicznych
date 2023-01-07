@@ -1,6 +1,7 @@
 package com.example.cokolwiek;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

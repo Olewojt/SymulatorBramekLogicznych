@@ -1,29 +1,34 @@
 package com.example.cokolwiek;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.io.IOException;
 
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 public class mainController implements Initializable {
-    @FXML
-    ListView<Gate> lista;
-    @FXML Pane display;
+    @FXML ListView<Gate> lista;
 
     @FXML TableView<Gate> tabela;
 
+    @FXML Text infoText;
     @FXML TextField nameField;
     @FXML TextField inputsField;
 
@@ -31,7 +36,36 @@ public class mainController implements Initializable {
     @FXML Button editButton;
     @FXML Button clearButton;
     @FXML Button deleteButton;
-    public DatabaseConnection handle;
+
+    @FXML TextField input1Field;
+    @FXML TextField input2Field;
+    @FXML TextField input3Field;
+    @FXML TextField input4Field;
+    @FXML TextField input5Field;
+    @FXML TextField input6Field;
+    @FXML TextField input7Field;
+    @FXML TextField input8Field;
+    @FXML TextField input9Field;
+    @FXML TextField input10Field;
+    @FXML Button checkButton;
+    @FXML Button truthButton;
+    @FXML Text outputText;
+    private Gate selected;
+
+    private TextField [] fields = {
+            input1Field,
+            input2Field,
+            input3Field,
+            input4Field,
+            input5Field,
+            input6Field,
+            input7Field,
+            input8Field,
+            input9Field,
+            input10Field,
+    };
+    private boolean editMode = false;
+    public static DatabaseConnection handle;
 
     TableColumn<Gate, Integer> idCol, inputsCol;
     TableColumn<Gate, String> nameCol, mapNameCol;
@@ -63,6 +97,18 @@ public class mainController implements Initializable {
             alert.setContentText("Nazwa nie może być pusta lub zawierać cyfr oraz musi być unikatowa. \nIlość wejść musi zawierać się w zakresie od 1 do 10.");
         }
         alert.showAndWait();
+    }
+
+    private void edit(){
+        if(this.editMode){
+            this.infoText.setText("Dodaj Bramkę");
+            this.tabela.setEditable(false);
+            this.editMode = false;
+        } else {
+            this.infoText.setText("!!!Tryb Edycji!!!");
+            this.tabela.setEditable(true);
+            this.editMode = true;
+        }
     }
 
     private void delete(){
@@ -97,6 +143,7 @@ public class mainController implements Initializable {
 
         this.inputsCol = new TableColumn<>("Inputs");
         inputsCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("Inputs"));
+        inputsCol.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
 
         this.mapNameCol = new TableColumn<>("Map_Name");
         mapNameCol.setMinWidth(150);
@@ -105,13 +152,32 @@ public class mainController implements Initializable {
         this.tabela.getColumns().addAll(idCol, nameCol, inputsCol, mapNameCol);
     }
 
+    private void updateList(ObservableList<Gate> dane){
+        this.lista.setItems(dane);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.handle = new DatabaseConnection();
         initTabela();
         loadData(handle.getBramkiTable());
 
-        TableColumn<Gate, ?> nameColumn = tabela.getColumns().get(1);
+        // Ustawienie "fabryki" komórek na liście, czyli co ma być wyświetlane jako element listy
+        // Tutaj będzie to nazwa bramki
+        this.lista.setCellFactory(new Callback<ListView<Gate>, ListCell<Gate>>() {
+            @Override public ListCell<Gate> call(ListView<Gate> list) {
+                return new GateCell();
+            }
+        });
+        // Aktualizacja listy z bazy
+        updateList(this.handle.getBramkiTable());
+
+        this.lista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Gate>() {
+            @Override
+            public void changed(ObservableValue<? extends Gate> observableValue, Gate lastGate, Gate newGate) {
+                selected = newGate;
+            }
+        });
 
         saveButton.setOnAction( event -> {
             if(!this.inputsField.getText().isBlank() && !this.nameField.getText().isBlank()){
@@ -140,8 +206,8 @@ public class mainController implements Initializable {
         });
 
         editButton.setOnAction( event -> {
+            edit();
             System.out.println("editButton");
-//            System.out.println(this.tabela.getSelectionModel().getFocusedIndex());
         });
 
         clearButton.setOnAction( event -> {
@@ -153,6 +219,19 @@ public class mainController implements Initializable {
         deleteButton.setOnAction( event -> {
             System.out.println("deleteButton");
             deletePrompt();
+        });
+
+        inputsCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Gate, Integer>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Gate, Integer> event) {
+                Gate gate = event.getRowValue();
+                gate.setInputs(event.getNewValue());
+            }
+        });
+
+        truthButton.setOnAction( event -> {
+            truthTableWindow obj = new truthTableWindow();
+            if(this.selected!=null) obj.setData(selected.getMap_Name());
         });
     }
 }

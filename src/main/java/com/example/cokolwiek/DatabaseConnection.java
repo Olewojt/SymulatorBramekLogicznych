@@ -58,4 +58,26 @@ public class DatabaseConnection {
                         e.printStackTrace();
                 }
         }
+
+        public ObservableList<inputModel> getTruthTable(String name){
+                ObservableList<inputModel> result = FXCollections.observableArrayList();
+                ResultSet rs = null;
+                try {
+                        Statement st = this.conn.createStatement();
+                        rs = st.executeQuery("SELECT * from "+name);
+                        int size = rs.getMetaData().getColumnCount();
+                        int [] mD = new int[11];
+                        while (rs.next()) {
+                                for(int i=0; i<size-1; i++){
+                                        mD[i] = rs.getInt(i+1);
+                                }
+                                mD[10] = rs.getInt(size);
+                                result.add(new inputModel(mD[0],mD[1],mD[2],mD[3],mD[4],mD[5],mD[6],mD[7],mD[8],mD[9],mD[10]));
+                                mD = new int[11];
+                        }
+                } catch (SQLException e){
+                        e.printStackTrace();
+                }
+                return result;
+        }
 }
