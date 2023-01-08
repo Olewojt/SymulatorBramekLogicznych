@@ -9,10 +9,9 @@ import javafx.stage.Stage;
 
 public class truthTableWindow {
 
-    private TableView root;
-    private String name;
+    private final TableView<inputModel> root;
     public truthTableWindow(){
-        this.root = new TableView();
+        this.root = new TableView<>();
         Scene scene = new Scene(this.root, 400, 400);
         Stage stage = new Stage();
         stage.setTitle("Truth Table");
@@ -20,7 +19,7 @@ public class truthTableWindow {
         stage.show();
     }
 
-    public void setData(String name){
+    public ObservableList<inputModel> setData(String name){
         ObservableList<inputModel> data = mainController.handle.getTruthTable(name);
         for(int i=1; i<data.size()-1; i++){
             TableColumn<inputModel, Integer> col = new TableColumn<>();
@@ -33,6 +32,7 @@ public class truthTableWindow {
         outCol.setText("output");
         this.root.getColumns().add(outCol);
         this.root.setItems(data);
+        return data;
 //        System.out.println(data.size());
     }
 }

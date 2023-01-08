@@ -2,9 +2,7 @@ package com.example.cokolwiek;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -52,24 +50,14 @@ public class mainController implements Initializable {
     @FXML Text outputText;
     private Gate selected;
 
-    private TextField [] fields = {
-            input1Field,
-            input2Field,
-            input3Field,
-            input4Field,
-            input5Field,
-            input6Field,
-            input7Field,
-            input8Field,
-            input9Field,
-            input10Field,
-    };
+    private TextField [] fields;
     private boolean editMode = false;
     public static DatabaseConnection handle;
 
     TableColumn<Gate, Integer> idCol, inputsCol;
     TableColumn<Gate, String> nameCol, mapNameCol;
     public static ObservableList<Gate> data;
+    public static ObservableList<inputModel> truthModel;
 
     private void deletePrompt(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -117,9 +105,9 @@ public class mainController implements Initializable {
         String outMapName = this.tabela.getItems().get(index).getMap_Name();
         System.out.println("Zaznaczony rekord nr. "+index);
         System.out.println(this.tabela.getItems().get(index).getMap_Name());
-        this.handle.deleteTable(outMapName);
-        this.handle.deleteRecord(indexDb);
-        loadData(this.handle.getBramkiTable());
+        handle.deleteTable(outMapName);
+        handle.deleteRecord(indexDb);
+        loadData(handle.getBramkiTable());
     }
 
     // inputs: 1-10 | name male, duze litery bez znakow specjalnych
@@ -156,11 +144,36 @@ public class mainController implements Initializable {
         this.lista.setItems(dane);
     }
 
+    // getSize()-1 bo output jest wliczany
+    private void updateFields(){
+        int used = truthModel.get(0).getSize()-1;
+        for(int i=0; i<used; i++){
+            this.fields[i].setDisable(false);
+        }
+
+        for(int i=used; i<11; i++){
+            this.fields[i].setDisable(true);
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.handle = new DatabaseConnection();
+        handle = new DatabaseConnection();
         initTabela();
         loadData(handle.getBramkiTable());
+        this.fields = new TextField[] {
+                    input1Field,
+                    input2Field,
+                    input3Field,
+                    input4Field,
+                    input5Field,
+                    input6Field,
+                    input7Field,
+                    input8Field,
+                    input9Field,
+                    input10Field,
+        };
+
 
         // Ustawienie "fabryki" komórek na liście, czyli co ma być wyświetlane jako element listy
         // Tutaj będzie to nazwa bramki
@@ -221,17 +234,18 @@ public class mainController implements Initializable {
             deletePrompt();
         });
 
-        inputsCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Gate, Integer>>() {
-            @Override
-            public void handle(TableColumn.CellEditEvent<Gate, Integer> event) {
-                Gate gate = event.getRowValue();
-                gate.setInputs(event.getNewValue());
-            }
-        });
+//        inputsCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Gate, Integer>>() {
+//            @Override
+//            public void handle(TableColumn.CellEditEvent<Gate, Integer> event) {
+//                Gate gate = event.getRowValue();
+//                gate.setInputs(event.getNewValue());
+//            }
+//        });
 
         truthButton.setOnAction( event -> {
             truthTableWindow obj = new truthTableWindow();
-            if(this.selected!=null) obj.setData(selected.getMap_Name());
+            if(this.selected!=null) truthModel = obj.setData(selected.getMap_Name());
+            updateFields();
         });
     }
 }

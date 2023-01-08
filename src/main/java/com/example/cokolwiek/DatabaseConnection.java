@@ -72,7 +72,9 @@ public class DatabaseConnection {
                                         mD[i] = rs.getInt(i+1);
                                 }
                                 mD[10] = rs.getInt(size);
-                                result.add(new inputModel(mD[0],mD[1],mD[2],mD[3],mD[4],mD[5],mD[6],mD[7],mD[8],mD[9],mD[10]));
+                                inputModel obj = new inputModel(mD[0],mD[1],mD[2],mD[3],mD[4],mD[5],mD[6],mD[7],mD[8],mD[9],mD[10]);
+                                obj.setSize(size);
+                                result.add(obj);
                                 mD = new int[11];
                         }
                 } catch (SQLException e){
