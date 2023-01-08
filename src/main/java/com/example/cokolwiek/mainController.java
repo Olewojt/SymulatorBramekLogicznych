@@ -79,20 +79,20 @@ public class mainController implements Initializable {
         }
     }
 
-    private void calculateTruth(int [] inputs) throws InvocationTargetException, IllegalAccessException {
+    private int calculateTruth(int [] inputs) {
 
-        Method[] getters = truthModel.get(0).getClass().getMethods();
+        for(int row=0; row<truthModel.size(); row++){
+            int [] truthTab = truthModel.get(row).getInputs();
+            int correct = 0;
 
-        for(int k=0; k<inputs.length; k++){
             for(int i=0; i<inputs.length; i++){
-                for (Method getter : getters) {
-                    if (getter.getName().equals("getInput" + (i + 1)))
-                        System.out.println(getter.invoke(truthModel.get(i)));
-                }
-                System.out.println("Input: "+inputs[i]);
+                if(inputs[i]==truthTab[i]) correct++;
+            }
+            if(correct==inputs.length){
+                return truthModel.get(row).getOutput();
             }
         }
-
+        return 999999;
     }
 
     private boolean truth(){
@@ -110,10 +110,11 @@ public class mainController implements Initializable {
                 return false;
             }
         }
-        try {
-            calculateTruth(userInput);
-        } catch (InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+        int result=calculateTruth(userInput);
+        if(result==999999){
+            this.outputText.setText("Brak wyjscia");
+        } else {
+            this.outputText.setText(String.valueOf(result));
         }
         return true;
     }

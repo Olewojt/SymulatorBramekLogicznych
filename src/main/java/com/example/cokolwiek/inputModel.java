@@ -15,6 +15,8 @@ public class inputModel {
     private final SimpleIntegerProperty input9;
     private final SimpleIntegerProperty input10;
     private final SimpleIntegerProperty output;
+
+    private final SimpleIntegerProperty [] inputsTab;
     private int size=0;
 
     public inputModel(int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, int output) {
@@ -29,6 +31,26 @@ public class inputModel {
         this.input9 = new SimpleIntegerProperty(i9);
         this.input10 = new SimpleIntegerProperty(i10);
         this.output = new SimpleIntegerProperty(output);
+       this.inputsTab = new SimpleIntegerProperty[]{
+               this.input1,
+               this.input2,
+               this.input3,
+               this.input4,
+               this.input5,
+               this.input6,
+               this.input7,
+               this.input8,
+               this.input9,
+               this.input10,
+       };
+    }
+
+    public int [] getInputs(){
+        int [] inputs = new int[this.size];
+        for(int i=0; i<this.size; i++){
+            inputs[i]=this.inputsTab[i].getValue();
+        }
+        return inputs;
     }
 
     public void setSize(int size){
