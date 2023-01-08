@@ -1,7 +1,5 @@
 package com.example.cokolwiek;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +10,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.io.IOException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -197,19 +192,19 @@ public class mainController implements Initializable {
     private void initTabela(){
 
         this.idCol = new TableColumn<>("ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("ID"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
 
         this.nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(100);
-        nameCol.setCellValueFactory(new PropertyValueFactory<Gate, String>("Name"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("Name"));
 
         this.inputsCol = new TableColumn<>("Inputs");
-        inputsCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("Inputs"));
+        inputsCol.setCellValueFactory(new PropertyValueFactory<>("Inputs"));
         inputsCol.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
 
         this.mapNameCol = new TableColumn<>("Map_Name");
         mapNameCol.setMinWidth(150);
-        mapNameCol.setCellValueFactory(new PropertyValueFactory<Gate, String>("Map_Name"));
+        mapNameCol.setCellValueFactory(new PropertyValueFactory<>("Map_Name"));
 
         this.tabela.getColumns().addAll(idCol, nameCol, inputsCol, mapNameCol);
     }
@@ -239,21 +234,14 @@ public class mainController implements Initializable {
 
         // Ustawienie "fabryki" komórek na liście, czyli co ma być wyświetlane jako element listy
         // Tutaj będzie to nazwa bramki
-        this.lista.setCellFactory(new Callback<ListView<Gate>, ListCell<Gate>>() {
-            @Override public ListCell<Gate> call(ListView<Gate> list) {
-                return new GateCell();
-            }
-        });
+        this.lista.setCellFactory(list -> new GateCell());
         // Aktualizacja listy z bazy
         updateList(handle.getBramkiTable());
 
-        this.lista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Gate>() {
-            @Override
-            public void changed(ObservableValue<? extends Gate> observableValue, Gate lastGate, Gate newGate) {
-                selected = newGate;
-                truthModel = handle.getTruthTable(selected.getMap_Name());
-                updateFields();
-            }
+        this.lista.getSelectionModel().selectedItemProperty().addListener((observableValue, lastGate, newGate) -> {
+            selected = newGate;
+            truthModel = handle.getTruthTable(selected.getMap_Name());
+            updateFields();
         });
 
         truthButton.setOnAction( event -> {
@@ -261,9 +249,7 @@ public class mainController implements Initializable {
             if(this.selected!=null) obj.setData(selected.getMap_Name());
         });
 
-        checkButton.setOnAction( event -> {
-            truth();
-        });
+        checkButton.setOnAction( event -> truth());
 
 
         // LOGIKA DRUGIEJ ZAKLADKI
@@ -310,14 +296,6 @@ public class mainController implements Initializable {
             System.out.println("deleteButton");
             deletePrompt();
         });
-
-//        inputsCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Gate, Integer>>() {
-//            @Override
-//            public void handle(TableColumn.CellEditEvent<Gate, Integer> event) {
-//                Gate gate = event.getRowValue();
-//                gate.setInputs(event.getNewValue());
-//            }
-//        });
-
+        
     }
 }
