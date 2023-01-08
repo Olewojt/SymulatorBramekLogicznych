@@ -120,7 +120,6 @@ public class mainController implements Initializable {
     }
 
 
-
     // DRUGA ZAKLADKA
 
     private void deletePrompt(){
@@ -281,6 +280,7 @@ public class mainController implements Initializable {
                         Stage stage = new Stage();
                         stage.setTitle("Dane Bramki");
                         stage.setScene(scene);
+                        controller.setParentStage(stage);
                         stage.show();
                     } catch ( IOException e ){
                         e.printStackTrace();
