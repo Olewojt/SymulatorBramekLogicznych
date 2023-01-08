@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class inputModel {
 
+    private final SimpleIntegerProperty ID;
     private final SimpleIntegerProperty input1;
     private final SimpleIntegerProperty input2;
     private final SimpleIntegerProperty input3;
@@ -19,7 +20,8 @@ public class inputModel {
     private final SimpleIntegerProperty [] inputsTab;
     private int size=0;
 
-    public inputModel(int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, int output) {
+    public inputModel(int ID, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int i9, int i10, int output) {
+        this.ID = new SimpleIntegerProperty(ID);
         this.input1 = new SimpleIntegerProperty(i1);
         this.input2 = new SimpleIntegerProperty(i2);
         this.input3 = new SimpleIntegerProperty(i3);
@@ -59,6 +61,18 @@ public class inputModel {
 
     public int getSize(){
         return this.size;
+    }
+
+    public int getID() {
+        return ID.get();
+    }
+
+    public SimpleIntegerProperty IDProperty() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID.set(ID);
     }
 
     public int getInput1() {

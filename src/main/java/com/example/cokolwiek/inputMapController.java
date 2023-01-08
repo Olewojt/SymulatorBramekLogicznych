@@ -1,8 +1,5 @@
 package com.example.cokolwiek;
 
-import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,23 +25,31 @@ public class inputMapController implements Initializable {
     private Stage parent;
     private ObservableList<inputModel> data;
     private int iloscKolumn;
+    private String tabName;
+    private int id=1;
 
     public void setParentStage(Stage s){
         this.parent = s;
     }
 
+    public void setName(String name){
+        this.tabName = name;
+    }
     public void ileKolumn(int ilosc){
         this.iloscKolumn = ilosc;
     }
 
     private void usunOstatni(){
-        if(this.data.size()!=0) this.data.remove(this.data.size()-1);
+        if(this.data.size()!=0) {
+            this.data.remove(this.data.size()-1);
+        }
     }
 
     private void dodajRekord(){
-        inputModel obj = new inputModel(0,0,0,0,0,0,0,0,0,0,0);
+        inputModel obj = new inputModel(this.id,0,0,0,0,0,0,0,0,0,0,0);
         obj.setSize(this.iloscKolumn);
         this.data.add(obj);
+        id++;
     }
 
 
@@ -78,7 +83,11 @@ public class inputMapController implements Initializable {
         });
 
         saveButton.setOnAction( event -> {
-
+            if(this.data.size()>0){
+                mainController.handle.addRecord(this.tabName, this.iloscKolumn);
+                mainController.handle.addTruthTable(this.tabName, this.data);
+            }
+            else System.out.println("Brak danych do wstawienia ~ inputMapController");
         });
 
         exitButton.setOnAction( event -> {

@@ -20,8 +20,9 @@ public class truthTableWindow {
     }
 
     public void setData(String name){
+//        System.out.println(name);
         ObservableList<inputModel> data = mainController.handle.getTruthTable(name);
-        for(int i=1; i<data.size()-1; i++){
+        for(int i=1; i<data.get(0).getSize()-1; i++){
             TableColumn<inputModel, Integer> col = new TableColumn<>();
             col.setCellValueFactory(new PropertyValueFactory<inputModel, Integer>("input"+i));
             col.setText("input"+i);

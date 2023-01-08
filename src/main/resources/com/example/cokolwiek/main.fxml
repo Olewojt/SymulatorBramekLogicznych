@@ -93,6 +93,7 @@
                         <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="Dodaj Bramkę" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
@@ -104,6 +105,7 @@
                         <Button fx:id="editButton" mnemonicParsing="false" text="Edytuj" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10" GridPane.valignment="CENTER" />
                         <Button fx:id="clearButton" mnemonicParsing="false" text="Wyczyść" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="12" GridPane.valignment="CENTER" />
                         <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="19.0" prefWidth="62.0" text="Usuń" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="14" GridPane.valignment="CENTER" />
+                        <Button fx:id="refreshButton" mnemonicParsing="false" text="Odśwież" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="16" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                   <TableView fx:id="tabela" prefHeight="369.0" prefWidth="332.0" />

@@ -31,6 +31,7 @@ public class mainController implements Initializable {
     @FXML Button editButton;
     @FXML Button clearButton;
     @FXML Button deleteButton;
+    @FXML Button refreshButton;
 
     @FXML TextField input1Field;
     @FXML TextField input2Field;
@@ -64,7 +65,7 @@ public class mainController implements Initializable {
 
     // getSize()-1 bo output jest wliczany
     private void updateFields(){
-        int used = truthModel.get(0).getSize()-1;
+        int used = truthModel.get(0).getSize()-2;
         for(int i=0; i<used; i++){
             this.fields[i].setDisable(false);
         }
@@ -91,8 +92,8 @@ public class mainController implements Initializable {
     }
 
     private boolean truth(){
-        int [] userInput = new int[truthModel.get(0).getSize()-1];
-        for(int i=0; i<truthModel.get(0).getSize()-1; i++){
+        int [] userInput = new int[truthModel.get(0).getSize()-2];
+        for(int i=0; i<truthModel.get(0).getSize()-2; i++){
             if(!fields[i].getText().isBlank()) {
                 if (fields[i].getText().matches("[-0-9]+")) {
                     userInput[i] = Integer.parseInt(fields[i].getText());
@@ -121,6 +122,7 @@ public class mainController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Usuwanie");
         alert.setHeaderText("Czy napewno chcesz usunąć?");
+        alert.setContentText("Rekord o ID: "+this.tabela.getItems().get(this.tabela.getSelectionModel().getFocusedIndex()).getID());
         Optional<ButtonType> res = alert.showAndWait();
         if(res.isEmpty()){
             System.out.println("Nie wiem!");
@@ -171,8 +173,8 @@ public class mainController implements Initializable {
         int index = this.tabela.getSelectionModel().getFocusedIndex();
         int indexDb = this.tabela.getItems().get(index).getID();
         String outMapName = this.tabela.getItems().get(index).getMap_Name();
-        System.out.println("Zaznaczony rekord nr. "+index);
-        System.out.println(this.tabela.getItems().get(index).getMap_Name());
+//        System.out.println("Zaznaczony rekord nr. "+index);
+//        System.out.println(this.tabela.getItems().get(index).getMap_Name());
         handle.deleteTable(outMapName);
         handle.deleteRecord(indexDb);
         loadData(handle.getBramkiTable());
@@ -216,7 +218,6 @@ public class mainController implements Initializable {
         initTabela();
         loadData(handle.getBramkiTable());
 
-
         // LOGIKA PIERWSZEJ ZAKLADKI
 
         this.fields = new TextField[] {
@@ -237,16 +238,20 @@ public class mainController implements Initializable {
         this.lista.setCellFactory(list -> new GateCell());
         // Aktualizacja listy z bazy
         updateList(handle.getBramkiTable());
+        this.selected = this.lista.getItems().get(0);
 
         this.lista.getSelectionModel().selectedItemProperty().addListener((observableValue, lastGate, newGate) -> {
-            selected = newGate;
-            truthModel = handle.getTruthTable(selected.getMap_Name());
-            updateFields();
+            if(newGate!=null) {
+                this.selected = newGate;
+                truthModel = handle.getTruthTable(this.selected.getMap_Name());
+//                System.out.println(this.selected.getMap_Name());
+                updateFields();
+            }
         });
 
         truthButton.setOnAction( event -> {
             truthTableWindow obj = new truthTableWindow();
-            if(this.selected!=null) obj.setData(selected.getMap_Name());
+            if(this.selected!=null) obj.setData(this.selected.getMap_Name());
         });
 
         checkButton.setOnAction( event -> truth());
@@ -261,6 +266,7 @@ public class mainController implements Initializable {
                         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("newWindow.fxml"));
                         inputMapController controller = new inputMapController();
                         controller.ileKolumn(Integer.parseInt(this.inputsField.getText())); // przekazuje ilosc kolumn
+                        controller.setName(this.nameField.getText());
                         fxmlLoader.setController(controller);
                         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
                         Stage stage = new Stage();
@@ -295,7 +301,14 @@ public class mainController implements Initializable {
         deleteButton.setOnAction( event -> {
             System.out.println("deleteButton");
             deletePrompt();
+            loadData(handle.getBramkiTable());
+            updateList(handle.getBramkiTable());
         });
-        
+
+        refreshButton.setOnAction( event -> {
+            loadData(handle.getBramkiTable());
+            updateList(handle.getBramkiTable());
+        });
+
     }
 }
