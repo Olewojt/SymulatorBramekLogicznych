@@ -19,7 +19,7 @@ public class truthTableWindow {
         stage.show();
     }
 
-    public ObservableList<inputModel> setData(String name){
+    public void setData(String name){
         ObservableList<inputModel> data = mainController.handle.getTruthTable(name);
         for(int i=1; i<data.size()-1; i++){
             TableColumn<inputModel, Integer> col = new TableColumn<>();
@@ -32,7 +32,6 @@ public class truthTableWindow {
         outCol.setText("output");
         this.root.getColumns().add(outCol);
         this.root.setItems(data);
-        return data;
 //        System.out.println(data.size());
     }
 }

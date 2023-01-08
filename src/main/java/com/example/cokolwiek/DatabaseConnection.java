@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 
-public class DatabaseConnection {
+public class DatabaseConnection implements dataTransfer{
         private final static String address = "jdbc:mysql://localhost:3306/aplikacja";
         private final static String user = "root";
         private final static String password = "root";

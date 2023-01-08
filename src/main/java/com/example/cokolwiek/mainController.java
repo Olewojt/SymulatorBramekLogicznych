@@ -17,6 +17,8 @@ import javafx.util.converter.IntegerStringConverter;
 
 import java.io.IOException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -59,6 +61,67 @@ public class mainController implements Initializable {
     public static ObservableList<Gate> data;
     public static ObservableList<inputModel> truthModel;
 
+    // PIERWSZA ZAKLADKA
+
+    private void updateList(ObservableList<Gate> dane){
+        this.lista.setItems(dane);
+    }
+
+    // getSize()-1 bo output jest wliczany
+    private void updateFields(){
+        int used = truthModel.get(0).getSize()-1;
+        for(int i=0; i<used; i++){
+            this.fields[i].setDisable(false);
+        }
+
+        for(int i=used; i<10; i++){
+            this.fields[i].setDisable(true);
+        }
+    }
+
+    private void calculateTruth(int [] inputs) throws InvocationTargetException, IllegalAccessException {
+
+        Method[] getters = truthModel.get(0).getClass().getMethods();
+
+        for(int k=0; k<inputs.length; k++){
+            for(int i=0; i<inputs.length; i++){
+                for (Method getter : getters) {
+                    if (getter.getName().equals("getInput" + (i + 1)))
+                        System.out.println(getter.invoke(truthModel.get(i)));
+                }
+                System.out.println("Input: "+inputs[i]);
+            }
+        }
+
+    }
+
+    private boolean truth(){
+        int [] userInput = new int[truthModel.get(0).getSize()-1];
+        for(int i=0; i<truthModel.get(0).getSize()-1; i++){
+            if(!fields[i].getText().isBlank()) {
+                if (fields[i].getText().matches("[-0-9]+")) {
+                    userInput[i] = Integer.parseInt(fields[i].getText());
+                } else {
+                    inputError(2);
+                    return false;
+                }
+            } else {
+                inputError(0);
+                return false;
+            }
+        }
+        try {
+            calculateTruth(userInput);
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+
+
+    // DRUGA ZAKLADKA
+
     private void deletePrompt(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Usuwanie");
@@ -74,16 +137,26 @@ public class mainController implements Initializable {
         }
     }
 
-    private void inputError(boolean puste){
+    private void inputError(int err){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Błędne dane");
-        if(puste){
-            alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
-            alert.setContentText("Puste pola!");
-        }else {
-            alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
-            alert.setContentText("Nazwa nie może być pusta lub zawierać cyfr oraz musi być unikatowa. \nIlość wejść musi zawierać się w zakresie od 1 do 10.");
+
+        switch(err) {
+            case 0:
+                alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+                alert.setContentText("Puste pola!");
+                break;
+
+            case 1:
+                alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+                alert.setContentText("Nazwa nie może być pusta lub zawierać cyfr oraz musi być unikatowa. \nIlość wejść musi zawierać się w zakresie od 1 do 10.");
+                break;
+
+            case 2:
+                alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+                alert.setContentText("Dane w polach input mogą być jedynie liczbami");
         }
+
         alert.showAndWait();
     }
 
@@ -122,6 +195,7 @@ public class mainController implements Initializable {
     }
 
     private void initTabela(){
+
         this.idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<Gate, Integer>("ID"));
 
@@ -140,40 +214,28 @@ public class mainController implements Initializable {
         this.tabela.getColumns().addAll(idCol, nameCol, inputsCol, mapNameCol);
     }
 
-    private void updateList(ObservableList<Gate> dane){
-        this.lista.setItems(dane);
-    }
-
-    // getSize()-1 bo output jest wliczany
-    private void updateFields(){
-        int used = truthModel.get(0).getSize()-1;
-        for(int i=0; i<used; i++){
-            this.fields[i].setDisable(false);
-        }
-
-        for(int i=used; i<11; i++){
-            this.fields[i].setDisable(true);
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         handle = new DatabaseConnection();
         initTabela();
         loadData(handle.getBramkiTable());
-        this.fields = new TextField[] {
-                    input1Field,
-                    input2Field,
-                    input3Field,
-                    input4Field,
-                    input5Field,
-                    input6Field,
-                    input7Field,
-                    input8Field,
-                    input9Field,
-                    input10Field,
-        };
 
+
+        // LOGIKA PIERWSZEJ ZAKLADKI
+
+        this.fields = new TextField[] {
+                input1Field,
+                input2Field,
+                input3Field,
+                input4Field,
+                input5Field,
+                input6Field,
+                input7Field,
+                input8Field,
+                input9Field,
+                input10Field,
+        };
 
         // Ustawienie "fabryki" komórek na liście, czyli co ma być wyświetlane jako element listy
         // Tutaj będzie to nazwa bramki
@@ -183,14 +245,28 @@ public class mainController implements Initializable {
             }
         });
         // Aktualizacja listy z bazy
-        updateList(this.handle.getBramkiTable());
+        updateList(handle.getBramkiTable());
 
         this.lista.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Gate>() {
             @Override
             public void changed(ObservableValue<? extends Gate> observableValue, Gate lastGate, Gate newGate) {
                 selected = newGate;
+                truthModel = handle.getTruthTable(selected.getMap_Name());
+                updateFields();
             }
         });
+
+        truthButton.setOnAction( event -> {
+            truthTableWindow obj = new truthTableWindow();
+            if(this.selected!=null) obj.setData(selected.getMap_Name());
+        });
+
+        checkButton.setOnAction( event -> {
+            truth();
+        });
+
+
+        // LOGIKA DRUGIEJ ZAKLADKI
 
         saveButton.setOnAction( event -> {
             if(!this.inputsField.getText().isBlank() && !this.nameField.getText().isBlank()){
@@ -209,11 +285,11 @@ public class mainController implements Initializable {
                         e.printStackTrace();
                     }
                 } else {
-                    inputError(false);
+                    inputError(1);
                 }
             } else {
                 System.out.println("Bład!");
-                inputError(true);
+                inputError(0);
             }
 
         });
@@ -242,10 +318,5 @@ public class mainController implements Initializable {
 //            }
 //        });
 
-        truthButton.setOnAction( event -> {
-            truthTableWindow obj = new truthTableWindow();
-            if(this.selected!=null) truthModel = obj.setData(selected.getMap_Name());
-            updateFields();
-        });
     }
 }
