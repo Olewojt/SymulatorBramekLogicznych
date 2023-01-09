@@ -59,13 +59,13 @@ public class mainController implements Initializable {
 
     // PIERWSZA ZAKLADKA
 
-    private void updateList(ObservableList<Gate> dane){
+    public void updateList(ObservableList<Gate> dane){
         this.lista.setItems(dane);
     }
 
     // getSize()-1 bo output jest wliczany
     private void updateFields(){
-        int used = truthModel.get(0).getSize()-2;
+        int used = truthModel.get(0).getSize();
         for(int i=0; i<used; i++){
             this.fields[i].setDisable(false);
         }
@@ -92,8 +92,8 @@ public class mainController implements Initializable {
     }
 
     private boolean truth(){
-        int [] userInput = new int[truthModel.get(0).getSize()-2];
-        for(int i=0; i<truthModel.get(0).getSize()-2; i++){
+        int [] userInput = new int[truthModel.get(0).getSize()];
+        for(int i=0; i<truthModel.get(0).getSize(); i++){
             if(!fields[i].getText().isBlank()) {
                 if (fields[i].getText().matches("[-0-9]+")) {
                     userInput[i] = Integer.parseInt(fields[i].getText());
@@ -187,7 +187,7 @@ public class mainController implements Initializable {
         return false;
     }
 
-    private void loadData(ObservableList<Gate> res){
+    public void loadData(ObservableList<Gate> res){
         this.tabela.setItems(res);
     }
 
@@ -267,6 +267,7 @@ public class mainController implements Initializable {
                         inputMapController controller = new inputMapController();
                         controller.ileKolumn(Integer.parseInt(this.inputsField.getText())); // przekazuje ilosc kolumn
                         controller.setName(this.nameField.getText());
+                        controller.setMainController(this);
                         fxmlLoader.setController(controller);
                         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
                         Stage stage = new Stage();

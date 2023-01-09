@@ -9,7 +9,7 @@ public class DatabaseConnection implements dataTransfer{
         private final static String address = "jdbc:mysql://localhost:3306/aplikacja";
         private final static String user = "root";
         private final static String password = "root";
-        private final static String driver = "com.mysql.jdbc.Driver";
+//        private final static String driver = "com.mysql.jdbc.Driver";
         private Connection conn;
 
         public DatabaseConnection() {
@@ -23,9 +23,8 @@ public class DatabaseConnection implements dataTransfer{
 
         public ObservableList<Gate> getBramkiTable(){
                 ObservableList<Gate> result = FXCollections.observableArrayList();
-                ResultSet rs = null;
+                ResultSet rs;
                 try {
-                        int size = 0;
                         Statement st = this.conn.createStatement();
                         rs = st.executeQuery("SELECT * from Bramki");
                         while (rs.next()) {
@@ -43,23 +42,24 @@ public class DatabaseConnection implements dataTransfer{
 
         public ObservableList<inputModel> getTruthTable(String name){
                 ObservableList<inputModel> result = FXCollections.observableArrayList();
-                ResultSet rs = null;
+                ResultSet rs;
                 try {
                         Statement st = this.conn.createStatement();
                         rs = st.executeQuery("SELECT * from "+name);
                         int size = rs.getMetaData().getColumnCount();
+                        System.out.println(size);
+                        int inputSize = size-2;
                         int [] mD = new int[12];
                         while (rs.next()) {
                                 for(int i=0; i<size-1; i++){
                                         mD[i] = rs.getInt(i+1);
-                                        System.out.print(mD[i] + " ");
+//                                        System.out.print(mD+ "");
                                 }
                                 mD[11] = rs.getInt(size);
                                 inputModel obj = new inputModel(mD[0], mD[1],mD[2],mD[3],mD[4],mD[5],mD[6],mD[7],mD[8],mD[9],mD[10],mD[11]);
-                                obj.setSize(size);
+                                obj.setSize(inputSize);
                                 result.add(obj);
                                 mD = new int[12];
-                                System.out.println();
                         }
                         System.out.println();
                 } catch (SQLException e){

@@ -23,10 +23,15 @@ public class inputMapController implements Initializable {
     @FXML Button exitButton;
     @FXML TableView<inputModel> tabela;
     private Stage parent;
+    private mainController main;
     private ObservableList<inputModel> data;
     private int iloscKolumn;
     private String tabName;
     private int id=1;
+
+    public void setMainController(mainController con) {
+        this.main = con;
+    }
 
     public void setParentStage(Stage s){
         this.parent = s;
@@ -86,6 +91,9 @@ public class inputMapController implements Initializable {
             if(this.data.size()>0){
                 mainController.handle.addRecord(this.tabName, this.iloscKolumn);
                 mainController.handle.addTruthTable(this.tabName, this.data);
+                main.updateList(mainController.handle.getBramkiTable());
+                main.loadData(mainController.handle.getBramkiTable());
+                this.parent.close();
             }
             else System.out.println("Brak danych do wstawienia ~ inputMapController");
         });
