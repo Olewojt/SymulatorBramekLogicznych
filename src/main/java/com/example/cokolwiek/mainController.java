@@ -28,7 +28,6 @@ public class mainController implements Initializable {
     @FXML TextField inputsField;
 
     @FXML Button saveButton;
-    @FXML Button editButton;
     @FXML Button clearButton;
     @FXML Button deleteButton;
     @FXML Button refreshButton;
@@ -291,13 +290,13 @@ public class mainController implements Initializable {
         });
 
         clearButton.setOnAction( event -> {
-            System.out.println("clearButton");
+//            System.out.println("clearButton");
             this.nameField.setText("");
             this.inputsField.setText("");
         });
 
         deleteButton.setOnAction( event -> {
-            System.out.println("deleteButton");
+//            System.out.println("deleteButton");
             deletePrompt();
             loadData(handle.getBramkiTable());
             loadData(handle.getBramkiTable());

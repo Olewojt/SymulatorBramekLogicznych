@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 
-public class DatabaseConnection implements dataTransfer{
+public class DatabaseConnection{
         private final static String address = "jdbc:mysql://localhost:3306/aplikacja";
         private final static String user = "root";
         private final static String password = "root";
@@ -92,18 +92,6 @@ public class DatabaseConnection implements dataTransfer{
                         String query = "INSERT INTO Bramki (Name, Inputs, Map_Name) VALUES ";
                         String values = String.format("('%s', %s, '%s')", name, inputs, name+"_OutputMap");
                         st.executeUpdate(query + values);
-                } catch (SQLException e){
-                        e.printStackTrace();
-                }
-        }
-
-        @Override
-        public void addTable(String name) {
-                try {
-                        Statement st = this.conn.createStatement();
-
-                        String truthTable = "CREATE TABLE "+name+"_OutputMap";
-                        st.executeQuery(truthTable);
                 } catch (SQLException e){
                         e.printStackTrace();
                 }
