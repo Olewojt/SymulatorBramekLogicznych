@@ -47,7 +47,7 @@ public class DatabaseConnection implements dataTransfer{
                         Statement st = this.conn.createStatement();
                         rs = st.executeQuery("SELECT * from "+name);
                         int size = rs.getMetaData().getColumnCount();
-                        System.out.println(size);
+//                        System.out.println(size);
                         int inputSize = size-2;
                         int [] mD = new int[12];
                         while (rs.next()) {
@@ -153,16 +153,6 @@ public class DatabaseConnection implements dataTransfer{
                         e.printStackTrace();
                 }
 
-        }
-
-        private void readTruthTableData(ObservableList<inputModel> data){
-                int size = data.get(0).getSize()+1;
-                for(int row = 0; row<data.size(); row++){
-                        for( int item : data.get(row).getInputs() ){
-                                System.out.print(item + " ");
-                        }
-                        System.out.println();
-                }
         }
 
 }

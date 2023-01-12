@@ -7,7 +7,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
-public class truthTableWindow {
+public class truthTableWindow{
 
     private final TableView<inputModel> root;
     public truthTableWindow(){

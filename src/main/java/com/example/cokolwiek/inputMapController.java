@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class inputMapController implements Initializable {
+public class inputMapController implements Initializable, popup {
     @FXML Button newButton;
     @FXML Button deleteButton;
     @FXML Button saveButton;

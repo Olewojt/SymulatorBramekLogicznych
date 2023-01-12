@@ -49,7 +49,6 @@ public class mainController implements Initializable {
     private Gate selected;
 
     private TextField [] fields;
-    private boolean editMode = false;
     public static DatabaseConnection handle;
 
     TableColumn<Gate, Integer> idCol, inputsCol;
@@ -63,7 +62,6 @@ public class mainController implements Initializable {
         this.lista.setItems(dane);
     }
 
-    // getSize()-1 bo output jest wliczany
     private void updateFields(){
         int used = truthModel.get(0).getSize();
         for(int i=0; i<used; i++){
@@ -152,21 +150,13 @@ public class mainController implements Initializable {
             case 2:
                 alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
                 alert.setContentText("Dane w polach input mogą być jedynie liczbami");
+
+            case 3:
+                alert.setHeaderText("Wprowadzone dane są nieprawidłowe");
+                alert.setContentText("W bazie znajduje się już bramka o tej samej nazwie");
         }
 
         alert.showAndWait();
-    }
-
-    private void edit(){
-        if(this.editMode){
-            this.infoText.setText("Dodaj Bramkę");
-            this.tabela.setEditable(false);
-            this.editMode = false;
-        } else {
-            this.infoText.setText("!!!Tryb Edycji!!!");
-            this.tabela.setEditable(true);
-            this.editMode = true;
-        }
     }
 
     private void delete(){
@@ -187,8 +177,16 @@ public class mainController implements Initializable {
         return false;
     }
 
+    private boolean checkDuplicateName(String text){
+        for (Gate g: data) {
+            if(text.equals(g.getName())) return false;
+        }
+        return true;
+    }
+
     public void loadData(ObservableList<Gate> res){
         this.tabela.setItems(res);
+        data = res;
     }
 
     private void initTabela(){
@@ -261,36 +259,35 @@ public class mainController implements Initializable {
 
         saveButton.setOnAction( event -> {
             if(!this.inputsField.getText().isBlank() && !this.nameField.getText().isBlank()){
-                if(save(this.nameField.getText(), Integer.parseInt(this.inputsField.getText()))){
-                    try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("newWindow.fxml"));
-                        inputMapController controller = new inputMapController();
-                        controller.ileKolumn(Integer.parseInt(this.inputsField.getText())); // przekazuje ilosc kolumn
-                        controller.setName(this.nameField.getText());
-                        controller.setMainController(this);
-                        fxmlLoader.setController(controller);
-                        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
-                        Stage stage = new Stage();
-                        stage.setTitle("Dane Bramki");
-                        stage.setScene(scene);
-                        controller.setParentStage(stage);
-                        stage.show();
-                    } catch ( IOException e ){
-                        e.printStackTrace();
+                if(checkDuplicateName(this.nameField.getText())) {
+                    if (save(this.nameField.getText(), Integer.parseInt(this.inputsField.getText()))) {
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("newWindow.fxml"));
+                            inputMapController controller = new inputMapController();
+                            controller.ileKolumn(Integer.parseInt(this.inputsField.getText())); // przekazuje ilosc kolumn
+                            controller.setName(this.nameField.getText());
+                            controller.setMainController(this);
+                            fxmlLoader.setController(controller);
+                            Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+                            Stage stage = new Stage();
+                            stage.setTitle("Dane Bramki");
+                            stage.setScene(scene);
+                            controller.setParentStage(stage);
+                            stage.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        inputError(1);
                     }
                 } else {
-                    inputError(1);
+                    inputError(3);
                 }
             } else {
                 System.out.println("Bład!");
                 inputError(0);
             }
 
-        });
-
-        editButton.setOnAction( event -> {
-            edit();
-            System.out.println("editButton");
         });
 
         clearButton.setOnAction( event -> {
@@ -302,6 +299,7 @@ public class mainController implements Initializable {
         deleteButton.setOnAction( event -> {
             System.out.println("deleteButton");
             deletePrompt();
+            loadData(handle.getBramkiTable());
             loadData(handle.getBramkiTable());
             updateList(handle.getBramkiTable());
         });
