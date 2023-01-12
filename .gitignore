@@ -38,7 +38,4 @@ build/
 .DS_Store
 .idea/
 .mvn/
-mvnw
-mvnw.cmd
-pom.xml
 
